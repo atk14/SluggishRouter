@@ -43,4 +43,4 @@ Use the Composer to install SluggishRouter.
 Licence
 -------
 
-Files is free software distributed [under the terms of the MIT license](http://www.opensource.org/licenses/mit-license)
+SluggishRouter is free software distributed [under the terms of the MIT license](http://www.opensource.org/licenses/mit-license)
