@@ -9,7 +9,11 @@
  * Router class
  *	// file: config/routers/articles_router.php
  * 	class ArticlesRouter extends SluggishRouter{
- *		var $url_patterns_by_lang = array("en" => "article", "cs" => "clanek");
+ *		var $patterns = [
+ *			"en" => "/article/<slug>/",
+ *			"cs" => "/clanek/<slug>/",
+ *			"sk" => "/clanok/<slug>/",
+ *		];
  * 	}
  *
  * Enable the router
@@ -24,9 +28,11 @@
  *
  */
 class SluggishRouter extends Atk14Router{
-	var $url_patterns_by_lang = array(); // .e.g., array("en" => "article"), both keys and values must be unique
+
+	var $patterns = array(); // .e.g., array("en" => "/article/<slug>/"), both keys and values must be unique
 	var $model_class_name = null; // .e.g., "Article", by default it is determined automatically
 	var $target_controller_name = null; // .e.g, "articles", by default it is determined automatically
+	protected $compiled_patterns = array();
 	
 	function __construct(){
 		global $ATK14_GLOBAL;
@@ -42,50 +48,57 @@ class SluggishRouter extends Atk14Router{
 			$this->target_controller_name = (string)$cn->underscore(); // "articles"
 		}
 
-		if(!$this->url_patterns_by_lang){
+		if(!$this->patterns){
 			$lang = $ATK14_GLOBAL->getDefaultLang();
-			$this->url_patterns_by_lang = array(
-				"$lang" => (string)$cn->underscore()->singularize()->replace("_","-") // "en" => "article"
+			$this->patterns = array(
+				"$lang" => sprintf("/%s/<slug>/",(string)$cn->underscore()->singularize()->replace("_","-")) // "en" => "/article/<slug>/"
 			);
+		}
+
+		$patterns_rev = array_combine(array_values($this->patterns),array_keys($this->patterns));
+		if(sizeof($this->patterns)!=sizeof($patterns_rev)){
+			throw new Exception(get_class($this).': non-unique values in $patterns');
+		}
+
+		$this->compiled_patterns = array();
+		foreach($this->patterns as $lang => $pattern){
+			$pattern = strtr($pattern,array(
+				'/' => "\\/",
+				'.' => "\\.",
+				'<slug>' => '(?P<slug>[a-z0-9-]+)',
+			));
+			$pattern = "/^$pattern$/"; // e.g. /^\/article\/(?P<slug>[a-z0-9-]+)\/$/
+			$this->compiled_patterns[$lang] = $pattern;
 		}
 
 		parent::__construct();
 	}
 
 	function recognize($uri){
-		$patterns = $this->url_patterns_by_lang;
-		$patterns_rev = array_combine(array_values($patterns),array_keys($patterns));
-		if(sizeof($patterns)!=sizeof($patterns_rev)){
-			throw new Exception(get_class($this).': non-unique values in $url_patterns_by_lang');
-		}
-
-		// TODO: prepsat pomoci array_walk?
-		foreach($patterns as $k => $v){
-			$patterns[$k] = str_replace('/',"\\/",$v);
-		}
-
-		$patterns = join("|",$patterns);
-		$class = $this->model_class_name;
-		if($this->namespace=="" && preg_match('/^\/('.$patterns.')\/([a-z0-9-_\/]+?)\/?$/',$uri,$matches)){
-			$lang = $patterns_rev[$matches[1]];
-			if($c = $class::GetInstanceBySlug($matches[2],$lang)){
-				$this->action = "detail";
-				$this->controller = $this->target_controller_name;
-				$this->params["id"] = $c->getId();
-				$this->lang = $lang;
+		foreach($this->compiled_patterns as $lang => $pattern){
+			if(preg_match($pattern,$uri,$matches)){
+				$class = $this->model_class_name;
+				if($c = $class::GetInstanceBySlug($matches["slug"],$lang)){
+					$this->action = "detail";
+					$this->controller = $this->target_controller_name;
+					$this->params["id"] = $c->getId();
+					$this->lang = $lang;
+					return;
+				}
+				return;
 			}
 		}
 	}
 
 	function build(){
 		$lang = (string)$this->lang;
-		if($this->controller!=$this->target_controller_name || $this->action!="detail" || !isset($this->url_patterns_by_lang[$lang])){ return; }
+		if($this->controller!=$this->target_controller_name || $this->action!="detail" || !isset($this->patterns[$lang])){ return; }
 
 		$class = $this->model_class_name;
 		if($c = Cache::Get($class,$this->params->getInt("id"))){
 			$this->params->del("id");
-			$pattern = $this->url_patterns_by_lang[$lang];
-			return sprintf('/%s/%s/',$pattern,$c->getSlug($lang));
+			$pattern = $this->patterns[$lang];
+			return str_replace('<slug>',$c->getSlug($lang),$pattern);
 		}
 	}
 }

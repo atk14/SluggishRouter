@@ -13,7 +13,11 @@ Router class:
     <?php
     // file: config/routers/articles_router.php
     class ArticlesRouter extends SluggishRouter {
-      var $url_patterns_by_lang = array("en" => "article", "cs" => "clanek");
+      var $patterns = [
+				"en" => "/article/<slug>/",
+				"cs" => "/clanek/<slug>/",
+				"sk" => "/clanok/<slug>/"
+			];
     }                                                                            
 
 Loading router:
