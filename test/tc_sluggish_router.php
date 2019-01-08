@@ -2,6 +2,7 @@
 class TcSluggishRouter extends TcBase {
 
 	function test(){
+		// Building URI
 		$router = new ArticlesRouter();
 
 		$router->controller = "articles";
@@ -18,6 +19,29 @@ class TcSluggishRouter extends TcBase {
 		$router->lang = "cs";
 		$this->assertEquals(null,$router->build());
 
-		
+		// Recognize
+		$router = new ArticlesRouter();
+		$this->assertEquals(null,$router->params["id"]);
+		$this->assertEquals("",$router->lang);
+		//
+		$router->recognize("/article/why-is-atk14-so-cool/");
+		$this->assertEquals("en",$router->lang);
+		$this->assertEquals(123,$router->params["id"]);
+
+		$router = new ArticlesRouter();
+		$this->assertEquals(null,$router->params["id"]);
+		$this->assertEquals("",$router->lang);
+		//
+		$router->recognize("/clanek/dalsi-skvely-clanek/");
+		$this->assertEquals("cs",$router->lang);
+		$this->assertEquals(222,$router->params["id"]);
+
+		$router = new ArticlesRouter();
+		$this->assertEquals(null,$router->params["id"]);
+		$this->assertEquals("",$router->lang);
+		//
+		$router->recognize("/article/not-really-an-article/");
+		$this->assertEquals("",$router->lang);
+		$this->assertEquals(null,$router->params["id"]);
 	}
 }

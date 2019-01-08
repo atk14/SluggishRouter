@@ -4,8 +4,8 @@ class Atk14Router {
 	function __construct(){
 		$this->controller = "";
 		$this->action = "";
+		$this->lang = "";
 		$this->params = new Dictionary();
-
 	}
 }
 

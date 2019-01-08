@@ -30,6 +30,10 @@ class Article {
 		}
 	}
 
+	function getId(){
+		return $this->id;
+	}
+
 	function getSlug($lang = null){
 		global $ATK14_GLOBAL;
 		if(!$lang){ $lang = $ATK14_GLOBAL->getDefaultLang(); }
