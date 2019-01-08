@@ -17,6 +17,8 @@
         },
         "require-dev": {
                 "phpunit/phpunit": "4.8.*",
+                "mockery/mockery": "0.9",
+								"atk14/dictionary": "*",
                 "atk14/string4": "*"
         },
         "autoload": {
