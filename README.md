@@ -1,9 +1,9 @@
 SluggishRouter
 ==============
 
-Base class for routers rendering URLs with slugs in ATK14 applications
+Base class for ATK14 routers generating nice looking URLs with slugs
 
-It can handle "detail" URLs for models that have method ```getSlug($lang)``` and static method ```GetInstanceBySlug($slug,&$lang)```.
+It can handle "detail" URLs for models that have method ```getSlug($lang)``` and static method ```GetInstanceBySlug($slug,&$lang)```. You can find both in the [Atk14Catalog](http://catalog.atk14.net/).
 
 Basic usage
 -----------
@@ -13,11 +13,15 @@ Router class:
     <?php
     // file: config/routers/articles_router.php
     class ArticlesRouter extends SluggishRouter {
+
       var $patterns = [
-				"en" => "/article/<slug>/",
-				"cs" => "/clanek/<slug>/",
-				"sk" => "/clanok/<slug>/"
-			];
+        "en" => "/article/<slug>/",
+        "cs" => "/clanek/<slug>/",
+        "sk" => "/clanok/<slug>/"
+      ];
+      
+      // var $model_class_name = "Article"; // by default determined automatically according to the router's class name
+      // var $target_controller_name = "articles"; // by determined determined automatically according to the router's class name
     }                                                                            
 
 Loading router:

@@ -8,13 +8,13 @@
  *
  * Router class
  *	// file: config/routers/articles_router.php
- * 	class ArticlesRouter extends SluggishRouter{
+ *	class ArticlesRouter extends SluggishRouter{
  *		var $patterns = [
  *			"en" => "/article/<slug>/",
  *			"cs" => "/clanek/<slug>/",
  *			"sk" => "/clanok/<slug>/",
  *		];
- * 	}
+ *	}
  *
  * Enable the router
  *	// file: config/routers/load.php
@@ -32,6 +32,7 @@ class SluggishRouter extends Atk14Router{
 	var $patterns = array(); // .e.g., array("en" => "/article/<slug>/"), both keys and values must be unique
 	var $model_class_name = null; // .e.g., "Article", by default it is determined automatically
 	var $target_controller_name = null; // .e.g, "articles", by default it is determined automatically
+
 	protected $compiled_patterns = array();
 	
 	function __construct(){

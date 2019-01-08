@@ -1,7 +1,7 @@
 {
         "name": "atk14/sluggish-router",
         "type": "library",
-        "description": "Base class for routers rendering URLs with slugs in a ATK14 application",
+        "description": "Base class for ATK14 routers generating nice looking URLs with slugs",
         "keywords": ["router","routing","slug","atk14"],
         "homepage": "https://github.com/atk14/SluggishRouter",
         "license": ["MIT"],
