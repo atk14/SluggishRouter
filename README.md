@@ -46,7 +46,7 @@ Installation
 Use the Composer to install SluggishRouter.
 
     cd path/to/your/project/
-    composer require atk14/sluggish-router dev-master
+    composer require atk14/sluggish-router
 
 Licence
 -------
