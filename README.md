@@ -29,7 +29,7 @@ Loading router:
     <?php
     // file: config/routers/load.php
     Atk14Url::AddRouter("ArticlesRouter"); // the default namespace ("")
-    Atk14Url::AddRouter("blog",AddRouter); // loading ArticlesRouter into namespace blog
+    Atk14Url::AddRouter("blog","ArticlesRouter"); // loading ArticlesRouter also into namespace blog
 
 In a template:
 
