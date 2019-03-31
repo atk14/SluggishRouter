@@ -15,9 +15,9 @@ Router class:
     class ArticlesRouter extends SluggishRouter {
 
       var $patterns = [
-        "en" => "/article/<slug>/",
-        "cs" => "/clanek/<slug>/",
-        "sk" => "/clanok/<slug>/"
+        "en" => ["index" => "/articles/", "detail" => "/articles/<slug>/"],
+        "cs" => ["index" => "/clanky/", "detail" => "/clanky/<slug>/"],
+        "sk" => ["index" => "/sk/clanky/", "detail" => "/sk/clanky/<slug>/"],
       ];
       
       // var $model_class_name = "Article"; // by default determined automatically according to the router's class name
@@ -37,7 +37,7 @@ In a template:
 
 Rendered HTML:
 
-    <a href="/article/why-is-the-atk14-so-cool/">Here is the article</a>
+    <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a>
 
 
 Installation

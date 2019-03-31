@@ -52,54 +52,85 @@ class SluggishRouter extends Atk14Router{
 		if(!$this->patterns){
 			$lang = $ATK14_GLOBAL->getDefaultLang();
 			$this->patterns = array(
-				"$lang" => sprintf("/%s/<slug>/",(string)$cn->underscore()->singularize()->replace("_","-")) // "en" => "/article/<slug>/"
+				"$lang" => array(
+					"index" => sprintf("/%s/",$cn->underscore()->replace("_","-")->toString()), // "/articles/"
+					"detail" => sprintf("/%s/<slug>/",$cn->underscore()->replace("_","-")->toString()), // "/articles/<slug>/"
+				)
 			);
 		}
 
+		foreach($this->patterns as $lang => $pattern_ar){
+			if(!is_array($pattern_ar)){
+				$pattern_ar = array("detail" => $pattern_ar);
+				$this->patterns[$lang] = $pattern_ar;
+			}
+		}
+
+		/*
 		$patterns_rev = array_combine(array_values($this->patterns),array_keys($this->patterns));
 		if(sizeof($this->patterns)!=sizeof($patterns_rev)){
 			throw new Exception(get_class($this).': non-unique values in $patterns');
-		}
+		} */
 
 		$this->compiled_patterns = array();
-		foreach($this->patterns as $lang => $pattern){
-			$pattern = strtr($pattern,array(
-				'/' => "\\/",
-				'.' => "\\.",
-				'<slug>' => '(?P<slug>[a-z0-9-]+)',
-			));
-			$pattern = "/^$pattern$/"; // e.g. /^\/article\/(?P<slug>[a-z0-9-]+)\/$/
-			$this->compiled_patterns[$lang] = $pattern;
+		foreach($this->patterns as $lang => $pattern_ar){
+			foreach($pattern_ar as $action => $pat){
+				$pat = strtr($pat,array(
+					'/' => "\\/",
+					'.' => "\\.",
+					'<slug>' => '(?P<slug>[a-z0-9-]+)',
+				));
+				$pattern_ar[$action] = "/^$pat$/"; // e.g. /^\/article\/(?P<slug>[a-z0-9-]+)\/$/
+			}
+			$this->compiled_patterns[$lang] = $pattern_ar;
 		}
+
+		//var_dump($this->patterns);
+		//var_dump($this->compiled_patterns); exit;
 
 		parent::__construct();
 	}
 
 	function recognize($uri){
-		foreach($this->compiled_patterns as $lang => $pattern){
-			if(preg_match($pattern,$uri,$matches)){
-				$class = $this->model_class_name;
-				if($c = $class::GetInstanceBySlug($matches["slug"],$lang)){
-					$this->action = "detail";
+		foreach($this->compiled_patterns as $lang => $pattern_ar){
+			foreach($pattern_ar as $action => $pat){
+				if(preg_match($pat,$uri,$matches)){
+
+					if(isset($matches["slug"])){
+						$class = $this->model_class_name;
+						if(!($c = $class::GetInstanceBySlug($matches["slug"],$lang))){
+							return;
+						}
+						$this->params["id"] = $c->getId();
+					}
+
+					$this->action = $action;
 					$this->controller = $this->target_controller_name;
-					$this->params["id"] = $c->getId();
 					$this->lang = $lang;
+
 					return;
 				}
-				return;
 			}
 		}
 	}
 
 	function build(){
 		$lang = (string)$this->lang;
-		if($this->controller!=$this->target_controller_name || $this->action!="detail" || !isset($this->patterns[$lang])){ return; }
+		$action = (string)$this->action;
 
-		$class = $this->model_class_name;
-		if($c = Cache::Get($class,$this->params->getInt("id"))){
-			$this->params->del("id");
-			$pattern = $this->patterns[$lang];
-			return str_replace('<slug>',$c->getSlug($lang),$pattern);
+		if($this->controller!=$this->target_controller_name || !isset($this->patterns[$lang]) || !isset($this->patterns[$lang][$action])){ return; }
+
+		$pattern = $this->patterns[$lang][$action];
+
+		if(strpos($pattern,"<slug>")!==false){
+			$class = $this->model_class_name;
+			if($c = Cache::Get($class,$this->params->getInt("id"))){
+				$this->params->del("id");
+				return str_replace('<slug>',$c->getSlug($lang),$pattern); // "/article/why-this-is-so-powerful/"
+			}
+			return;
 		}
+
+		return $pattern; // "/articles/"
 	}
 }

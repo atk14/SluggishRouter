@@ -2,6 +2,6 @@
 class Cache {
 	
 	static function Get($class_name,$id){
-		return Article::GetInstance($id);
+		return $class_name::GetInstance($id);
 	}
 }

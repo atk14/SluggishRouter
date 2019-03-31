@@ -12,8 +12,15 @@ class Atk14Router {
 require(__DIR__ . "/../src/sluggish_router.php");
 require(__DIR__ . "/../vendor/autoload.php");
 
-require(__DIR__ . "/articles_router.php");
-require(__DIR__ . "/article.php");
+require(__DIR__ . "/models/model.php");
+require(__DIR__ . "/models/article.php");
+require(__DIR__ . "/models/product.php");
+require(__DIR__ . "/models/static_page.php");
+
+require(__DIR__ . "/routers/articles_router.php");
+require(__DIR__ . "/routers/products_router.php");
+require(__DIR__ . "/routers/static_pages_router.php");
+
 require(__DIR__ . "/cache.php");
 
 interface IAtk14Global {
