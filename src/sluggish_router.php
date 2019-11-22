@@ -75,12 +75,13 @@ class SluggishRouter extends Atk14Router{
 		$this->compiled_patterns = array();
 		foreach($this->patterns as $lang => $pattern_ar){
 			foreach($pattern_ar as $action => $pat){
+				$pat = preg_replace('/\/$/','/?',$pat); // "/articles/" -> "/articles/?"
 				$pat = strtr($pat,array(
 					'/' => "\\/",
 					'.' => "\\.",
 					'<slug>' => '(?P<slug>[a-z0-9-]+)',
 				));
-				$pattern_ar[$action] = "/^$pat$/"; // e.g. /^\/article\/(?P<slug>[a-z0-9-]+)\/$/
+				$pattern_ar[$action] = "/^$pat$/"; // e.g. /^\/article\/(?P<slug>[a-z0-9-]+)\/?$/
 			}
 			$this->compiled_patterns[$lang] = $pattern_ar;
 		}

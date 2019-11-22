@@ -94,10 +94,12 @@ class TcSluggishRouter extends TcBase {
 
 		// Recognize
 		$router = new ProductsRouter();
-		$this->assertEquals(null,$router->params["id"]);
-		$this->assertEquals("",$router->lang);
-		//
 		$router->recognize("/product/atk14-book/");
+		$this->assertEquals("en",$router->lang);
+		$this->assertEquals(11,$router->params["id"]);
+
+		$router = new ProductsRouter();
+		$router->recognize("/product/atk14-book"); // no ending slash
 		$this->assertEquals("en",$router->lang);
 		$this->assertEquals(11,$router->params["id"]);
 
@@ -105,6 +107,12 @@ class TcSluggishRouter extends TcBase {
 		$router->recognize("/produkt/atk14-book/");
 		$this->assertEquals("cs",$router->lang);
 		$this->assertEquals(11,$router->params["id"]);
+
+		$router = new ProductsRouter(); // no ending slash
+		$router->recognize("/produkt/atk14-book");
+		$this->assertEquals("cs",$router->lang);
+		$this->assertEquals(11,$router->params["id"]);
+
 
 		$router = new ProductsRouter();
 		$router->recognize("/produkt/vesely-zeleny-hrnecek/");
@@ -124,7 +132,19 @@ class TcSluggishRouter extends TcBase {
 		$this->assertEquals("index",$router->action);
 
 		$router = new ProductsRouter();
+		$router->recognize("/products"); // no ending slash
+		$this->assertEquals("en",$router->lang);
+		$this->assertEquals("products",$router->controller);
+		$this->assertEquals("index",$router->action);
+
+		$router = new ProductsRouter();
 		$router->recognize("/produkty/");
+		$this->assertEquals("cs",$router->lang);
+		$this->assertEquals("products",$router->controller);
+		$this->assertEquals("index",$router->action);
+
+		$router = new ProductsRouter();
+		$router->recognize("/produkty"); // no ending slash
 		$this->assertEquals("cs",$router->lang);
 		$this->assertEquals("products",$router->controller);
 		$this->assertEquals("index",$router->action);
