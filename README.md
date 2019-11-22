@@ -21,7 +21,7 @@ Router class:
       ];
       
       // var $model_class_name = "Article"; // by default determined automatically according to the router's class name
-      // var $target_controller_name = "articles"; // by determined determined automatically according to the router's class name
+      // var $target_controller_name = "articles"; // by default determined automatically according to the router's class name
     }                                                                            
 
 Loading router:
@@ -33,11 +33,13 @@ Loading router:
 
 In a template:
 
-    {a controller="articles" action="detail" id=123}Here is the article{/a} 
+    {a controller="articles" action="detail" id=123}Here is the article{/a}<br>
+    {a controller="articles" action="index"}Show all articles{/a}
 
 Rendered HTML:
 
-    <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a>
+    <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a><br>
+    <a href="/articles/">Show all articles</a>
 
 
 Installation
@@ -47,6 +49,13 @@ Use the Composer to install SluggishRouter.
 
     cd path/to/your/project/
     composer require atk14/sluggish-router
+
+Testing
+-------
+
+    composer update --dev
+    cd test
+    ../vendor/bin/run_unit_tests
 
 Licence
 -------
