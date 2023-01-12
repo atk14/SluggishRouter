@@ -20,6 +20,8 @@ require(__DIR__ . "/models/static_page.php");
 require(__DIR__ . "/routers/articles_router.php");
 require(__DIR__ . "/routers/products_router.php");
 require(__DIR__ . "/routers/static_pages_router.php");
+require(__DIR__ . "/routers/generic_articles_router.php");
+require(__DIR__ . "/routers/generic_products_router.php");
 
 require(__DIR__ . "/cache.php");
 
@@ -30,3 +32,4 @@ interface IAtk14Global {
 
 $ATK14_GLOBAL = Mockery::mock("Atk14Global");
 $ATK14_GLOBAL->shouldReceive("getDefaultLang")->andReturn("en");
+$ATK14_GLOBAL->shouldReceive("getSupportedLangs")->andReturn(array("en","cs","sk"));

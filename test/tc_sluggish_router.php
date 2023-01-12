@@ -168,7 +168,7 @@ class TcSluggishRouter extends TcBase {
 
 		$router->params["id"] = 111;
 		$router->lang = "cs";
-		$this->assertEquals(null,$router->build());
+		$this->assertEquals("",$router->build());
 
 		$router->params["id"] = 222;
 		$router->lang = "en";
@@ -207,5 +207,22 @@ class TcSluggishRouter extends TcBase {
 		$this->assertEquals("static_pages",$router->controller);
 		$this->assertEquals("index",$router->action);
 		$this->assertEquals(null,$router->params["id"]);
+	}
+
+	function test_generic_routers(){
+		$router = new GenericArticlesRouter();
+		$this->assertEquals(array(
+			"en" => array("detail" => "/en/article/<slug>/"),
+			"cs" => array("detail" => "/cs/article/<slug>/"),
+			"sk" => array("detail" => "/sk/article/<slug>/"),
+		),$router->patterns);
+
+		// 
+		$router = new GenericProductsRouter();
+		$this->assertEquals(array(
+			"en" => array("detail" => "/en/product/<slug>/", "index" => "/en/products/"),
+			"cs" => array("detail" => "/cs/product/<slug>/", "index" => "/cs/products/"),
+			"sk" => array("detail" => "/sk/product/<slug>/", "index" => "/sk/products/"),
+		),$router->patterns);
 	}
 }

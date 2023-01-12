@@ -51,12 +51,29 @@ class SluggishRouter extends Atk14Router{
 
 		if(!$this->patterns){
 			$lang = $ATK14_GLOBAL->getDefaultLang();
-			$this->patterns = array(
-				"$lang" => array(
-					"index" => sprintf("/%s/",$cn->underscore()->replace("_","-")->toString()), // "/articles/"
-					"detail" => sprintf("/%s/<slug>/",$cn->underscore()->replace("_","-")->toString()), // "/articles/<slug>/"
-				)
+
+			// route for the default lang
+			$this->patterns["$lang"] = array(
+				"index" => sprintf("/%s/",$cn->underscore()->replace("_","-")->toString()), // "/articles/"
+				"detail" => sprintf("/%s/<slug>/",$cn->underscore()->replace("_","-")->toString()), // "/articles/<slug>/"
 			);
+
+			/*
+			// routes for all the other langs
+			// (not sure if this is desired behaviour)
+			$this->patterns["<lang>"] = array(
+				"index" => sprintf("/<lang>/%s/",$cn->underscore()->replace("_","-")->toString()), // "/<lang>/articles/"
+				"detail" => sprintf("/<lang>/%s/<slug>/",$cn->underscore()->replace("_","-")->toString()), // "/<lang>/articles/<slug>/"
+			);
+			*/
+		}
+
+		if(isset($this->patterns["<lang>"])){
+			foreach($ATK14_GLOBAL->getSupportedLangs() as $lang){
+				if(isset($this->patterns[$lang])){ continue; }
+				$this->patterns[$lang] = $this->_replace_lang($this->patterns["<lang>"],$lang);
+			}
+			unset($this->patterns["<lang>"]);
 		}
 
 		foreach($this->patterns as $lang => $pattern_ar){
@@ -133,5 +150,16 @@ class SluggishRouter extends Atk14Router{
 		}
 
 		return $pattern; // "/articles/"
+	}
+
+	function _replace_lang($route,$lang){
+		if(is_array($route)){
+			foreach($route as $k => $v){
+				$route[$k] = str_replace("<lang>",$lang,$route[$k]);
+			}
+		}else{
+			$route = str_replace("<lang>",$lang,$route);
+		}
+		return $route;
 	}
 }

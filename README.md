@@ -22,7 +22,7 @@ Router class:
       
       // var $model_class_name = "Article"; // by default determined automatically according to the router's class name
       // var $target_controller_name = "articles"; // by default determined automatically according to the router's class name
-    }                                                                            
+    }
 
 Loading router:
 
@@ -41,6 +41,16 @@ Rendered HTML:
     <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a><br>
     <a href="/articles/">Show all articles</a>
 
+Generic routers
+---------------
+
+    <?php
+    // file: config/routers/articles_router.php
+    class ArticlesRouter extends SluggishRouter {
+      var $patterns = [
+        "<lang>" => ["index" => "/<lang>/articles/", "detail" => "/<lang>/articles/<slug>/"],
+      ];
+    }
 
 Installation
 ------------
