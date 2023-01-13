@@ -61,19 +61,19 @@ class SluggishRouter extends Atk14Router{
 			/*
 			// routes for all the other langs
 			// (not sure if this is desired behaviour)
-			$this->patterns["<lang>"] = array(
+			$this->patterns["*"] = array(
 				"index" => sprintf("/<lang>/%s/",$cn->underscore()->replace("_","-")->toString()), // "/<lang>/articles/"
 				"detail" => sprintf("/<lang>/%s/<slug>/",$cn->underscore()->replace("_","-")->toString()), // "/<lang>/articles/<slug>/"
 			);
 			*/
 		}
 
-		if(isset($this->patterns["<lang>"])){
+		if(isset($this->patterns["*"])){
 			foreach($ATK14_GLOBAL->getSupportedLangs() as $lang){
 				if(isset($this->patterns[$lang])){ continue; }
-				$this->patterns[$lang] = $this->_replace_lang($this->patterns["<lang>"],$lang);
+				$this->patterns[$lang] = $this->_replace_lang($this->patterns["*"],$lang);
 			}
-			unset($this->patterns["<lang>"]);
+			unset($this->patterns["*"]);
 		}
 
 		foreach($this->patterns as $lang => $pattern_ar){
@@ -149,8 +149,7 @@ class SluggishRouter extends Atk14Router{
 			return;
 		}
 
-		return $pattern; // "/articles/"
-	}
+		return $pattern; // "/articl*}
 
 	function _replace_lang($route,$lang){
 		if(is_array($route)){

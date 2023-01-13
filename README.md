@@ -48,7 +48,7 @@ Generic routers
     // file: config/routers/articles_router.php
     class ArticlesRouter extends SluggishRouter {
       var $patterns = [
-        "<lang>" => ["index" => "/<lang>/articles/", "detail" => "/<lang>/articles/<slug>/"],
+        "*" => ["index" => "/<lang>/articles/", "detail" => "/<lang>/articles/<slug>/"],
       ];
     }
 
