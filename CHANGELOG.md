@@ -2,6 +2,10 @@ Change Log
 ==========
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2023-01-13
+
+* 78a7728 - Default route must be specified with "*" (it was "<lang>" before)
+
 ## [1.1.2] - 2023-01-12
 
 * ca50890 - Added support for generic routes
