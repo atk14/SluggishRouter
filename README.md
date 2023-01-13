@@ -41,8 +41,10 @@ Rendered HTML:
     <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a><br>
     <a href="/articles/">Show all articles</a>
 
-Generic routers
----------------
+Fallback route
+--------------
+
+A fallback route for all the unlisted languages can be specified using the asterisk symbol.
 
     <?php
     // file: config/routers/articles_router.php
