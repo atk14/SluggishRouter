@@ -149,7 +149,8 @@ class SluggishRouter extends Atk14Router{
 			return;
 		}
 
-		return $pattern; // "/articl*}
+		return $pattern; // "/articles/"
+	}
 
 	function _replace_lang($route,$lang){
 		if(is_array($route)){
