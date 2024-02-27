@@ -41,6 +41,32 @@ Rendered HTML:
     <a href="/articles/why-is-the-atk14-so-cool/">Here is the article</a><br>
     <a href="/articles/">Show all articles</a>
 
+An easier way to set the routes:
+
+    <?php
+    // file: config/routers/articles_router.php
+    class ArticlesRouter extends SluggishRouter {
+
+      var $patterns = [
+        "en" => "articles", // same as ["index" => "/articles/", "detail" => "/articles/<slug>/"]
+        "cs" => "clanky", //  same as ["index" => "/clanky/", "detail" => "/clanky/<slug>/"]
+        "sk" => "sk/clanky", // same as ["index" => "/sk/clanky/", "detail" => "/sk/clanky/<slug>/"]
+      ];
+    }
+
+Setting only detail routes:
+
+    <?php
+    // file: config/routers/articles_router.php
+    class ArticlesRouter extends SluggishRouter {
+
+      var $patterns = [
+        "en" => "/articles/<slug>/", // same as ["detail" => "/articles/<slug>/"]
+        "cs" => "/clanky/<slug>/", //  same as ["detail" => "/clanky/<slug>/"]
+        "sk" => "/sk/clanky/<slug>/", // same as ["detail" => "/sk/clanky/<slug>/"]
+      ];
+    }
+
 Fallback route
 --------------
 

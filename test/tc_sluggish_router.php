@@ -156,6 +156,66 @@ class TcSluggishRouter extends TcBase {
 		$this->assertEquals("",$router->action);
 	}
 
+	function test_BlogsRouter(){
+		$router = new BlogsRouter();
+
+		$router->controller = "blogs";
+		$router->action = "index";
+		$router->lang = "en";
+		$this->assertEquals("/blog/",$router->build());
+
+		$router->controller = "blogs";
+		$router->action = "index";
+		$router->lang = "cs";
+		$this->assertEquals("/blogisek/",$router->build());
+
+		$router->controller = "blogs";
+		$router->action = "detail";
+		$router->params["id"] = 123;
+		$router->lang = "en";
+		$this->assertEquals("/blog/why-is-atk14-so-cool/",$router->build());
+
+		$router->controller = "blogs";
+		$router->action = "detail";
+		$router->lang = "cs";
+		$router->params["id"] = 123;
+		$this->assertEquals("/blogisek/proc-je-atk14-tak-skvele/",$router->build());
+
+		// Recognize
+
+		$router = new BlogsRouter();
+		$router->recognize("/blogisek/");
+		$this->assertEquals("blogs",$router->controller);
+		$this->assertEquals("index",$router->action);
+		$this->assertEquals("cs",$router->lang);
+
+		$router = new BlogsRouter();
+		$router->recognize("/blog/");
+		$this->assertEquals("blogs",$router->controller);
+		$this->assertEquals("index",$router->action);
+		$this->assertEquals("en",$router->lang);
+
+		$router = new BlogsRouter();
+		$router->recognize("/blog/why-is-atk14-so-cool/");
+		$this->assertEquals("blogs",$router->controller);
+		$this->assertEquals("detail",$router->action);
+		$this->assertEquals("123",$router->params["id"]);
+		$this->assertEquals("en",$router->lang);
+
+		$router = new BlogsRouter();
+		$router->recognize("/blogisek/proc-je-atk14-tak-skvele/");
+		$this->assertEquals("blogs",$router->controller);
+		$this->assertEquals("detail",$router->action);
+		$this->assertEquals("123",$router->params["id"]);
+		$this->assertEquals("cs",$router->lang);
+
+		$router = new BlogsRouter();
+		$router->recognize("/articles/");
+		$this->assertEquals("",$router->controller);
+		$this->assertEquals("",$router->action);
+		$this->assertEquals("",$router->lang);
+	}
+
 	function test_StaticPagesRouter(){
 		// Building - in the StaticPagesRouter there are only paths for the default language
 		$router = new StaticPagesRouter();

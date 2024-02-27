@@ -22,6 +22,7 @@ require(__DIR__ . "/routers/products_router.php");
 require(__DIR__ . "/routers/static_pages_router.php");
 require(__DIR__ . "/routers/generic_articles_router.php");
 require(__DIR__ . "/routers/generic_products_router.php");
+require(__DIR__ . "/routers/blogs_router.php");
 
 require(__DIR__ . "/cache.php");
 
