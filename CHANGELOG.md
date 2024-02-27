@@ -2,6 +2,10 @@ Change Log
 ==========
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2024-02-27
+
+* 3deb66d - Added another easy way to set up the router
+
 ## [1.1.3] - 2023-01-13
 
 * 78a7728 - Default route must be specified with "*" (it was "<lang>" before)
